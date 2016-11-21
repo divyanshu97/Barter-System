@@ -9,16 +9,13 @@ using System.Data.SqlClient;
 using System.Configuration;
 using System.IO;
 
-public partial class Login : System.Web.UI.Page
+public partial class User_Home : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-        Session["UserLogin"] = null;
-        Session["Email"] = null;
         lblIncorrectEmail.Visible = false;
         lblIncorrectPassword.Visible = false;
     }
-
     protected void btnLogin_Click(object sender, EventArgs e)
     {
         int count = 0;
@@ -49,7 +46,7 @@ public partial class Login : System.Web.UI.Page
                 cmd.Connection = connect;
                 connect.Open();
                 activated = Convert.ToInt32(cmd.ExecuteScalar());
-                
+
                 connect.Close();
             }
         }

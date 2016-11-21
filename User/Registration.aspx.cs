@@ -58,38 +58,49 @@ public partial class Registration : System.Web.UI.Page
         Hash objHash = new Hash();
         Mail objMail = new Mail();
 
-
-        if (FileProfilePicture.HasFile)
+        try
         {
-            HttpPostedFile postedImage = FileProfilePicture.PostedFile;
-            string imgName = Path.GetFileName(postedImage.FileName);
-            imgExtension = Path.GetExtension(imgName);
-            int imgSize = postedImage.ContentLength;
 
-            if (imgExtension.ToLower() == ".jpg" || imgExtension.ToLower() == ".png" || imgExtension.ToLower() == ".jpeg")
+            if (FileProfilePicture.HasFile)
             {
-                if (imgSize <= 1572864)
-                {
-                    Stream stream = postedImage.InputStream;//returns a stream object pointing to the posted file to read the contents of the file
-                    BinaryReader binaryReader = new BinaryReader(stream);
-                    byte[] imgBytes = binaryReader.ReadBytes((int)stream.Length);
+                HttpPostedFile postedImage = FileProfilePicture.PostedFile;
+                string imgName = Path.GetFileName(postedImage.FileName);
+                imgExtension = Path.GetExtension(imgName);
+                int imgSize = postedImage.ContentLength;
 
-                    objUser.ProfilePicture = imgBytes;
+                if (imgExtension.ToLower() == ".jpg" || imgExtension.ToLower() == ".png" || imgExtension.ToLower() == ".jpeg")
+                {
+                    if (imgSize <= 1572864)
+                    {
+                        Stream stream = postedImage.InputStream;//returns a stream object pointing to the posted file to read the contents of the file
+                        BinaryReader binaryReader = new BinaryReader(stream);
+                        byte[] imgBytes = binaryReader.ReadBytes((int)stream.Length);
+
+                        objUser.ProfilePicture = imgBytes;
+                    }
+                    else
+                    {
+                        lblMessage.Text = "File size should be less than 1.5MB";
+                        lblMessage.Visible = true;
+                        return;
+                    }
                 }
                 else
                 {
-                    lblMessage.Text = "File size should be less than 1.5MB";
+                    lblMessage.Text = "File should be only in jpg/jpeg or png format";
                     lblMessage.Visible = true;
                     return;
                 }
-            }
-            else
-            {
-                lblMessage.Text = "File should be only in jpg/jpeg or png format";
-                lblMessage.Visible = true;
-                return;
+
+
             }
         }
+        catch(Exception ex)
+        {
+            lblMessage.Text = "File size should be less than 1.5MB";
+        }
+
+
         objUser.Name = tbxName.Text.Trim();
         objUser.Email = tbxEmail.Text.Trim();
         objUser.Password = encrytedPassword;
@@ -98,20 +109,26 @@ public partial class Registration : System.Web.UI.Page
         objUser.Phone = tbxPhone.Text;
         objUser.Dob = tbxDob.Text;
 
-        string activationUrl = "http://localhost:62846/User/Verification.aspx?Email=" + tbxEmail.Text;
+        string activationUrl = "http://localhost:59195/User/Verification.aspx?Email=" + tbxEmail.Text;
+
 
         objUser.SignUp(objUser);
         string subject = "Account Activation";
 
         string body = "<a href='" + activationUrl + "'>Click Here to verify your acount</a>";
 
+        //string body = "Hello " + tbxName.Text.Trim() + ",";
+        //body += "<br />Your Activation Code is " + activationCode + ". <br />Use this code to Activate your Account.";
+        //body += "<br /><br />Thanks";
+
         Mail.Send_Mail(tbxEmail.Text.Trim(), body, subject);
+        //Response.Redirect("AccountConfirmation.aspx");
         ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Verification Link has been sent to you in Email.')", true);
     }
 
     protected void lnkLogin_Click(object sender, EventArgs e)
     {
-        MpeLogin.Show();
+        //MpeLogin.Show();
     }
 }
 

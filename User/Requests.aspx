@@ -1,13 +1,13 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Login.aspx.cs" Inherits="Login" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeFile="Requests.aspx.cs" Inherits="Requests" %>
 
 <!DOCTYPE html>
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-    <title>LOGIN</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <title>REQUESTS</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="https://use.fontawesome.com/f299e4c7c4.js"></script>
@@ -37,6 +37,17 @@
             .main_img {
                 width: 106%;
             }
+        }
+        .auto-style5 {
+            width: 100px;
+            height: 51px;
+        }
+        .auto-style6 {
+            width: 100px;
+            height: 50px;
+        }
+        .auto-style8 {
+            width: 100px;
         }
     </style>
 </head>
@@ -79,7 +90,10 @@
                         </form>
                     </li>
 
-                    <li><a href="#about-barter" class="[ animate ]">ABOUT</a></li>
+                    <li><a href="Profile.aspx" class="[ animate ]">PROFILE</a></li>
+                    <li><a href="AddSkills.aspx" class="[ animate ]">ADD SKILLS</a></li>
+                    <li><a href="Skills.aspx" class="[ animate ]">SEARCH SKILLS</a></li>
+                    <li><a href="Commenting.aspx" class="[ animate ]">POSTS</a></li>                   
                     <li><a href="Query.aspx" class="[ animate ]">QUERY US</a></li>
                     <li>
                         <%--<a href="#" class="[ dropdown-toggle ][ animate ]" data-toggle="dropdown">GENRES <span class="[ caret ]"></span></a>--%>
@@ -96,42 +110,43 @@
                     </li>
 
 
-                    <li><a class="animate" href="Registration.aspx">SIGNUP</a></li>
+                    <li><a class="animate" href="Logout.aspx">LOGOUT</a></li>
             </div>
         </div>
     </nav>
-
     <form id="form1" runat="server">
-        <div id="container">
-            <div class="jumbotron text-center">
-                <h1>Log in
-                </h1>
-            </div>
-            <div class="col-sm-4">
-            </div>
-            <div class="col-sm-4">
-                <p>
-                    <asp:Label ID="lblEmail" runat="server" Text="Email" Font-Bold="true" Font-Size="Medium"></asp:Label>
-                    <asp:TextBox ID="tbxEmail" class="form-control" input type="email" placeholder="Enter Email" runat="server"></asp:TextBox>
-                    <asp:RequiredFieldValidator ID="RequiredEmail" runat="server" Display="Dynamic" ControlToValidate="tbxEmail" ErrorMessage="Enter Email" ForeColor="Red"></asp:RequiredFieldValidator>
-                    <asp:Label ID="lblIncorrectEmail" runat="server" display="Dynamic" ForeColor="Red"></asp:Label>
-                </p>
-                <p>
-                    <asp:Label ID="lblPassword" runat="server" Text="Password" Font-Bold="true" Font-Size="Medium"></asp:Label>
-                    <asp:TextBox ID="tbxPassword" class="form-control" input type="password" placeholder="Enter Password" runat="server"></asp:TextBox>
-                    <asp:Label ID="lblIncorrectPassword" runat="server" Text="Incorrect Password" display="Dynamic" ForeColor="Red"></asp:Label>
-                    <asp:RequiredFieldValidator ID="RequiredFieldValidatorPassword" runat="server" Display="Dynamic" ControlToValidate="tbxPassword" ErrorMessage="Enter Password" ForeColor="Red"></asp:RequiredFieldValidator>
-                </p>
-                <div class="forget-password-link" style="float: left;">
-                    <a href="ForgotPassword.aspx">Forgot Password?</a>
-                </div>
-                <p>
-                    <asp:Button ID="btnLogin" class="btn btn-primary btn-block" runat="server" style="width:85%;background-color:#1fbad6;" Text="Login" OnClick="btnLogin_Click" />
-                </p>
-                <div class="not-register-yet-link">
-                    NOT YET REGISTERED? <a href="#">SIGN UP</a>
-                </div>
-            </div>
+        <div>&nbsp</div>
+        <div>&nbsp</div>
+        <div>&nbsp</div>
+        <div>&nbsp</div>
+        <div class="table table-condensed">
+            <table style="text-align:center;">
+                <tr>
+                    <th class="auto-style6">&nbsp&nbsp Followers
+                    </th>
+                    <th class="auto-style6">&nbsp&nbsp Skill Needed
+                    </th>
+                    <th class="auto-style6">&nbsp&nbsp Response
+                    </th>
+                </tr>
+                <asp:Repeater ID="RepeaterRequest" runat="server" OnItemCommand="RepeaterRequest_ItemCommand">
+                    <ItemTemplate>
+                        <tr>
+
+                            <td >
+                                <asp:Label ID="lblFollower" runat="server" Text='<%#Eval("Name") %>'></asp:Label>
+                            </td>
+                            <td>
+                                <asp:Label ID="lblSkill" runat="server" Text='<%#Eval("SkillName") %>'></asp:Label>
+                            </td>
+                            <td>
+                                <asp:LinkButton ID="btnAccept" runat="server" CommandName="Accept" CommandArgument='<%# DataBinder.Eval(Container.DataItem, "Id")%>'  Text="Accept" />
+                            </td>
+                        </tr>
+                    </ItemTemplate>
+                </asp:Repeater>
+            </table>
+            <asp:Label ID="lblInfo" runat="server" ForeColor="#CC0000" ></asp:Label>
         </div>
     </form>
 </body>

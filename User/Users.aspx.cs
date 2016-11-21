@@ -5,12 +5,10 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-public partial class Logout : System.Web.UI.Page
+public partial class Users : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-        Session["UserLogin"] = null;
-        Response.Redirect("Login.aspx");
+
     }
-    
 }
