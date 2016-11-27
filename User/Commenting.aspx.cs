@@ -16,7 +16,7 @@ public partial class Commenting : System.Web.UI.Page
         {
             if (Session["UserId"] != null)
             {
-                RepeaterComment.DataSource = GetComments("Select c.Id,c.Comment,c.Likes,u.Name,u.Image from tblComments as c inner join tblUsers as u on u.Id=c.SenderId");
+                RepeaterComment.DataSource = GetComments("Select c.Id,c.Comment,c.Likes,u.Name,u.Image from tblComments as c inner join tblUsers as u on u.Id=c.SenderId order by c.Id desc");
                 RepeaterComment.DataBind();
             }
             else

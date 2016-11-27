@@ -54,87 +54,97 @@ public partial class ProviderProfile : System.Web.UI.Page
     }
     protected void SkillSelecting(object source, RepeaterCommandEventArgs e)
     {
-        ((Label)e.Item.FindControl("lblRequested")).Visible = true;
-        ((Label)e.Item.FindControl("lblRequested")).Text = "Requested";
-        string Need = ((LinkButton)e.CommandSource).Text;
-        int NeedId = 0;
-        string ProviderEmail = "";
-        string RequestedName = "";
-        string str = ConfigurationManager.ConnectionStrings["UserDetailsConnectionString"].ConnectionString;
-        using (SqlConnection connect = new SqlConnection(str))
+        if (e.CommandName == "RequestSkill")
         {
-            using (SqlCommand cmd = new SqlCommand("Select Id from tblSkills where SkillName='" + Need + "'"))
-            {
-                cmd.Connection = connect;
-                connect.Open();
-                NeedId = Convert.ToInt32(cmd.ExecuteScalar().ToString());
-                connect.Close();
-            }
-        }
-        using (SqlConnection connect = new SqlConnection(str))
-        {
-            using (SqlCommand cmd = new SqlCommand("Select Email from tblUsers where Id='" + Convert.ToInt32(Session["ProviderId"]) + "'"))
-            {
-                cmd.Connection = connect;
-                connect.Open();
-                ProviderEmail = (cmd.ExecuteScalar().ToString());
-                connect.Close();
-            }
-        }
-        using (SqlConnection connect = new SqlConnection(str))
-        {
-            using (SqlCommand cmd = new SqlCommand("Select Name from tblUsers where Id='" + Convert.ToInt32(Session["UserId"]) + "'"))
-            {
-                cmd.Connection = connect;
-                connect.Open();
-                RequestedName = cmd.ExecuteScalar().ToString();
-                connect.Close();
-            }
-        }
-        int count = 0;
-        using (SqlConnection connect = new SqlConnection(str))
-        {
-            using (SqlCommand cmd = new SqlCommand("Select count(*) from tblUserFollowMapping where FollowerId=@FollowerId and FollowedId=@FollowedId and SkillId=@SkillId"))
-            {
-                cmd.Connection = connect;
-                connect.Open();
-                cmd.Parameters.AddWithValue("@FollowerId", Convert.ToInt32(Session["UserId"]));
-                cmd.Parameters.AddWithValue("@FollowedId", Convert.ToInt32(Session["ProviderId"]));
-                cmd.Parameters.AddWithValue("@SkillId", NeedId);
-                count = Convert.ToInt32(cmd.ExecuteScalar().ToString());
-                connect.Close();
-            }
-        }
-        if (count == 0)
-        {
-
+            ((Label)e.Item.FindControl("lblRequested")).Visible = true;
+            ((Label)e.Item.FindControl("lblRequested")).Text = "Requested";
+            string Need = ((LinkButton)e.CommandSource).Text;
+            int NeedId = 0;
+            string ProviderEmail = "";
+            string RequestedName = "";
+            string str = ConfigurationManager.ConnectionStrings["UserDetailsConnectionString"].ConnectionString;
             using (SqlConnection connect = new SqlConnection(str))
             {
-                using (SqlCommand cmd = new SqlCommand("Insert into tblUserFollowMapping(FollowerId,FollowedId,SkillId) values(@FollowerId,@FollowedId,@SkillId)"))
+                using (SqlCommand cmd = new SqlCommand("Select Id from tblSkills where SkillName='" + Need + "'"))
+                {
+                    cmd.Connection = connect;
+                    connect.Open();
+                    NeedId = Convert.ToInt32(cmd.ExecuteScalar().ToString());
+                    connect.Close();
+                }
+            }
+            using (SqlConnection connect = new SqlConnection(str))
+            {
+                using (SqlCommand cmd = new SqlCommand("Select Email from tblUsers where Id='" + Convert.ToInt32(Session["ProviderId"]) + "'"))
+                {
+                    cmd.Connection = connect;
+                    connect.Open();
+                    ProviderEmail = (cmd.ExecuteScalar().ToString());
+                    connect.Close();
+                }
+            }
+            using (SqlConnection connect = new SqlConnection(str))
+            {
+                using (SqlCommand cmd = new SqlCommand("Select Name from tblUsers where Id='" + Convert.ToInt32(Session["UserId"]) + "'"))
+                {
+                    cmd.Connection = connect;
+                    connect.Open();
+                    RequestedName = cmd.ExecuteScalar().ToString();
+                    connect.Close();
+                }
+            }
+            int count = 0;
+            using (SqlConnection connect = new SqlConnection(str))
+            {
+                using (SqlCommand cmd = new SqlCommand("Select count(*) from tblUserFollowMapping where FollowerId=@FollowerId and FollowedId=@FollowedId and SkillId=@SkillId"))
                 {
                     cmd.Connection = connect;
                     connect.Open();
                     cmd.Parameters.AddWithValue("@FollowerId", Convert.ToInt32(Session["UserId"]));
                     cmd.Parameters.AddWithValue("@FollowedId", Convert.ToInt32(Session["ProviderId"]));
                     cmd.Parameters.AddWithValue("@SkillId", NeedId);
-                    cmd.ExecuteNonQuery();
+                    count = Convert.ToInt32(cmd.ExecuteScalar().ToString());
                     connect.Close();
                 }
             }
-            ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Your Request has Been Send to the Provider')", true);
+            if (count == 0)
+            {
 
-            string subject = "Barter System";
+                using (SqlConnection connect = new SqlConnection(str))
+                {
+                    using (SqlCommand cmd = new SqlCommand("Insert into tblUserFollowMapping(FollowerId,FollowedId,SkillId) values(@FollowerId,@FollowedId,@SkillId)"))
+                    {
+                        cmd.Connection = connect;
+                        connect.Open();
+                        cmd.Parameters.AddWithValue("@FollowerId", Convert.ToInt32(Session["UserId"]));
+                        cmd.Parameters.AddWithValue("@FollowedId", Convert.ToInt32(Session["ProviderId"]));
+                        cmd.Parameters.AddWithValue("@SkillId", NeedId);
+                        cmd.ExecuteNonQuery();
+                        connect.Close();
+                    }
+                }
+                ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Your Request has Been Send to the Provider')", true);
 
-            string body = "Hello " + ProviderEmail + ",";
-            body += "<br />You were requested by " + RequestedName + " . <br />Visit our WebSite to confirm the request.";
-            body += "<br /><br />Thanks";
+                string subject = "Barter System";
 
-            Mail.Send_Mail(ProviderEmail, body, subject);
-            lblInfo.Text = "Requested";
+                string body = "Hello " + ProviderEmail + ",";
+                body += "<br />You were requested by " + RequestedName + " . <br />Visit our WebSite to confirm the request.";
+                body += "<br /><br />Thanks";
+
+                Mail.Send_Mail(ProviderEmail, body, subject);
+                lblInfo.Text = "Requested";
+            }
+            else
+            {
+                lblInfo.Text = "You have already requested for this skill from this user";
+            }
         }
-        else
+        else if(e.CommandName== "Show_Reviews")
         {
-            lblInfo.Text = "You have already requested for this skill from this user";
+
+            int ID = Convert.ToInt32(e.CommandArgument.ToString());
+            Session["SkillReviewed"] =ID;
+            Response.Redirect("Reviews.aspx");
         }
     }
 
@@ -169,6 +179,7 @@ public partial class ProviderProfile : System.Web.UI.Page
 
     protected void btnMessage_Click(object sender, EventArgs e)
     {
+        Session["MessageToId"] =Session["ProviderId"];
         Response.Redirect("Message.aspx");
     }
 }

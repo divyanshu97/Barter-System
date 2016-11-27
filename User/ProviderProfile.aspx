@@ -115,7 +115,7 @@
         <div>&nbsp</div>
 
         <div>
-            <asp:Button ID="btnMessage" runat="server" OnClick="btnMessage_Click" Text="Message" />
+            <asp:Button ID="btnMessage" class="btn btn-primary" runat="server" OnClick="btnMessage_Click" Text="Message" />
         </div>
 
         <div style="height: 230px; width: 230px;">
@@ -177,7 +177,7 @@
                     <ItemTemplate>
                         <tr>
                             <td>
-                                <asp:LinkButton ID="lblSkill" runat="server" Text='<%#Eval("SkillName") %>'></asp:LinkButton>
+                                <asp:LinkButton ID="lblSkill" runat="server" CommandName="RequestSkill" Text='<%#Eval("SkillName") %>'></asp:LinkButton>
                             </td>
                             <td>
                                 <asp:Label ID="lblDetails" runat="server" Text='<%#Eval("SkillDetails") %>'></asp:Label>
@@ -194,6 +194,9 @@
                             </td>
                             <td>
                                 <asp:Label ID="lblRequested" runat="server" Text='<%#Eval("Id") %>' Visible="false"></asp:Label>
+                            </td>
+                            <td>
+                                <asp:LinkButton ID="btnReview" runat="server" Text="Reviews" CommandName="Show_Reviews" CommandArgument='<%# DataBinder.Eval(Container.DataItem, "Id")%>' />
                             </td>
                         </tr>
                     </ItemTemplate>

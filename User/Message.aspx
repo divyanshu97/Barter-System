@@ -16,10 +16,35 @@
 </head>
 <body>
     <form id="form1" runat="server">
-    <div class="col-sm-4">
-    <asp:TextBox ID="tbxMessage" class="form-control" TextMode="MultiLine" runat="server" placeholder="Message" ></asp:TextBox>
-        <asp:Button id="btnSend" class="btn btn-primary"  runat="server" Text="Send"></asp:Button>
-    </div>
+        <div class="col-sm-4">
+            <asp:TextBox ID="tbxMessage" class="form-control" TextMode="MultiLine" runat="server" placeholder="Message"></asp:TextBox>
+            <asp:Button ID="btnSend" class="btn btn-primary" runat="server" Text="Send" OnClick="SendMessage"></asp:Button>
+        </div>
+        <div class="col-sm-12">
+            <asp:Image ID="imgYou" class="img-circle" runat="server" Style="width: 30%; height: 236px;" />
+                        
+            <asp:Image ID="Image1" ImageUrl="../image/Arrow.jpg" runat="server" Style="width: 30%; height: 236px; " />
+                       
+            <asp:Image ID="imgReciever" class="img-circle" runat="server" Style="width: 30%; height: 236px; " />
+                   
+                <table>
+                <asp:Repeater ID="RepeaterMessages" runat="server">
+                    <ItemTemplate>
+                        <tr>
+                            <td>
+                                <asp:Label ID="lblPerson" runat="server" Text='<%#Eval("Name") %>'></asp:Label>
+                            </td>
+                            <td>
+                                <asp:Label runat="server" Text=" : "></asp:Label>
+                            </td>
+                            <td>
+                                <asp:Label ID="lblMessage" runat="server" Text='<%#Eval("Message") %>'></asp:Label>
+                            </td>
+                        </tr>
+                    </ItemTemplate>
+                </asp:Repeater>
+            </table>
+        </div>
     </form>
 </body>
 </html>

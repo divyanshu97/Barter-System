@@ -50,6 +50,10 @@ public partial class SearchSkills : System.Web.UI.Page
             }
                 ddlSkills.Items.Insert(0, new ListItem("Select", "-1"));
             }
+            else
+            {
+                Response.Redirect("Login.aspx");
+            }
         }
     }
 
