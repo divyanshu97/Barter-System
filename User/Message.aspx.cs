@@ -67,6 +67,7 @@ public partial class User_Message : System.Web.UI.Page
             cmd.ExecuteNonQuery();
             connect.Close();
             tbxMessage.Text = "";
+            Response.Redirect("Message.aspx");
         }
     }
 }

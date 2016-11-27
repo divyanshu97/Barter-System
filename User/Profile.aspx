@@ -43,16 +43,14 @@
             width: 100px;
         }
 
-        .auto-style3 {
-            width: 100px;
-            height: 50px;
-        }
-
         .auto-style5 {
             margin-right: 18px;
         }
         .wallpaper{
             background-image:url("../image/wallpaper.jpg");
+        }
+        .auto-style6 {
+            width: 266px;
         }
     </style>
 </head>
@@ -284,7 +282,7 @@
                         <th class="auto-style2">Provider
                         </th>
                     </tr>
-                    <asp:Repeater ID="RepeaterRequested" runat="server">
+                    <asp:Repeater ID="RepeaterRequested" runat="server" OnItemCommand="RepeaterRequested_ItemCommand">
                         <ItemTemplate>
                             <tr>
                                 <td>
@@ -292,6 +290,15 @@
                                 </td>
                                 <td>
                                     <asp:Label ID="lblRequestFrom" runat="server" Text='<%#Eval("Email") %>'></asp:Label>
+                                </td>
+                                <td>
+                                    <asp:LinkButton ID="btnReview" runat="server" CommandName="Review"  CommandArgument='<%# DataBinder.Eval(Container.DataItem, "Id")%>' Text="Review"></asp:LinkButton>
+                                </td>
+                                <td>
+                                    <asp:TextBox ID="tbxReview" class="form-control"  runat="server" TextMode="MultiLine" Visible="false"></asp:TextBox>
+                                </td>
+                                <td>
+                                    <asp:LinkButton ID="btnPost" runat="server" CommandName="Post"  CommandArgument='<%# DataBinder.Eval(Container.DataItem, "Id")%>' Text="Post" Visible="false"/>
                                 </td>
                             </tr>
                         </ItemTemplate>
@@ -302,7 +309,34 @@
 
             <asp:Button ID="btnSearchSkill" runat="server" class="btn btn-primary"  Text="Search Skill" OnClick="btnSearchSkill_Click" Visible="false" />
         </div>
+            <div class="col-sm-4">
+            </div>
+            <asp:Label ID="Label2" runat="server" Text="Persons following you : " Font-Bold="true" ForeColor="Red"></asp:Label>
+            <div class="table table-condensed">
+                <table class="auto-style5">
+                    <tr>
+                        <th class="auto-style6">Follower
+                        </th>
+                        <th class="auto-style2">Skill
+                        </th>
+                    </tr>
+                <asp:Repeater ID="RepeaterRequesters" runat="server" >
+                    <ItemTemplate>
+                            <tr>
+                                <td>
+                                    <asp:Label ID="lblApplier" runat="server" Text='<%#Eval("Email") %>'></asp:Label>
+                                </td>
+                                <td>
+                                    <asp:Label ID="lblApplierAskedSkill" runat="server" Text='<%#Eval("SkillName") %>'></asp:Label>
+                                </td>
+                            </tr>
+                    </ItemTemplate>
+                </asp:Repeater>
+                    
+                        </table>
+            <asp:Label ID="lblInfo3" runat="server" ForeColor="#CC0000"></asp:Label>
 
+            </div>
     </form>
 </body>
 </html>

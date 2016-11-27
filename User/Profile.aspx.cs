@@ -27,6 +27,10 @@ public partial class User_Profile : System.Web.UI.Page
                 ds = GetRequests();
                 RepeaterRequested.DataSource = ds;
                 RepeaterRequested.DataBind();
+
+                ds = GetApplier();
+                RepeaterRequesters.DataSource = ds;
+                RepeaterRequesters.DataBind();
             }
             else
             {
@@ -121,7 +125,7 @@ public partial class User_Profile : System.Web.UI.Page
             cmd.Parameters.AddWithValue("@Gender", Gender);
             cmd.Parameters.AddWithValue("@City", ((TextBox)e.Item.FindControl("tbxCity")).Text);
             cmd.Parameters.AddWithValue("@Phone", ((TextBox)e.Item.FindControl("tbxPhone")).Text);
-            
+
 
             cmd.ExecuteNonQuery();
             connect.Close();
@@ -190,7 +194,7 @@ public partial class User_Profile : System.Web.UI.Page
                 {
                     string subject = "Barter System";
 
-                    string body =  "One Skill has been Deleted";
+                    string body = "One Skill has been Deleted";
 
                     //string body = "Hello " + tbxName.Text.Trim() + ",";
                     //body += "<br />Your Activation Code is " + activationCode + ". <br />Use this code to Activate your Account.";
@@ -254,7 +258,7 @@ public partial class User_Profile : System.Web.UI.Page
         int count = 0;
         using (SqlConnection connect = new SqlConnection(str))
         {
-            using (SqlCommand cmd = new SqlCommand("Select count(*) from tblUserFollowMapping where FollowerId='" + Convert.ToInt32(Session["UserId"]) + "'"))
+            using (SqlCommand cmd = new SqlCommand("Select count(*) from tblUserFollowMapping where Accepted=1 and FollowerId='" + Convert.ToInt32(Session["UserId"]) + "'"))
             {
                 cmd.Connection = connect;
                 connect.Open();
@@ -274,12 +278,97 @@ public partial class User_Profile : System.Web.UI.Page
         }
         using (SqlConnection connect = new SqlConnection(str))
         {
-            SqlDataAdapter da = new SqlDataAdapter("Select s.SkillName,u.FollowedId,s.Id,ur.Email from tblUserFollowMapping as u inner join tblSkills as s on u.SkillId=s.Id inner join tblUsers as ur on ur.Id=u.FollowedId where FollowerId='" + Convert.ToInt32(Session["UserId"]) + "'", connect);
+            SqlDataAdapter da = new SqlDataAdapter("Select s.SkillName,u.FollowedId,s.Id,ur.Email,u.Accepted from tblUserFollowMapping as u inner join tblSkills as s on u.SkillId=s.Id inner join tblUsers as ur on ur.Id=u.FollowedId where Accepted=1 and  FollowerId='" + Convert.ToInt32(Session["UserId"]) + "'", connect);
             DataSet ds = new DataSet();
             da.Fill(ds);
             return ds;
         }
     }
+
+
+    public DataSet GetApplier()
+    {
+        string str = ConfigurationManager.ConnectionStrings["UserDetailsConnectionString"].ConnectionString;
+        int count = 0;
+        using (SqlConnection connect = new SqlConnection(str))
+        {
+            using (SqlCommand cmd = new SqlCommand("Select count(*) from tblUserFollowMapping where Accepted=1 and FollowedId='" + Convert.ToInt32(Session["UserId"]) + "'"))
+            {
+                cmd.Connection = connect;
+                connect.Open();
+                count = Convert.ToInt32(cmd.ExecuteScalar().ToString());
+                connect.Close();
+            }
+        }
+        if (count == 0)
+        {
+            lblInfo3.Text = "No one is following you till now";
+        }
+        else
+        {
+            lblInfo3.Text = "";
+        }
+        using (SqlConnection connect = new SqlConnection(str))
+        {
+            SqlDataAdapter da = new SqlDataAdapter("Select s.SkillName,u.FollowedId,s.Id,ur.Email from tblUserFollowMapping as u inner join tblSkills as s on u.SkillId=s.Id inner join tblUsers as ur on ur.Id=u.FollowedId where u.Accepted=1 and FollowedId='" + Convert.ToInt32(Session["UserId"]) + "'", connect);
+            DataSet ds = new DataSet();
+            da.Fill(ds);
+            return ds;
+        }
+    }
+
+
+    protected void RepeaterRequested_ItemCommand(object source, RepeaterCommandEventArgs e)
+    {
+        if (e.CommandName == "Review")
+        {
+            ((TextBox)e.Item.FindControl("tbxReview")).Visible = true;
+            ((LinkButton)e.Item.FindControl("btnPost")).Visible = true;
+            ((LinkButton)e.Item.FindControl("btnReview")).Visible = false;
+        }
+        else if (e.CommandName == "Post")
+        {
+            int UserId = Convert.ToInt32(Session["UserId"]);
+            string str = ConfigurationManager.ConnectionStrings["UserDetailsConnectionString"].ConnectionString;
+            string review = ((TextBox)e.Item.FindControl("tbxReview")).Text;
+            int skillID = Convert.ToInt32(e.CommandArgument.ToString());
+            int ReviewedUserId;
+            string Email = ((Label)e.Item.FindControl("lblRequestFrom")).Text;
+            if(review!="")
+            {
+                using (SqlConnection connect1 = new SqlConnection(str))
+                {
+                    using (SqlCommand cmd = new SqlCommand("select Id from tblUsers where Email=@Email"))
+                    {
+                        cmd.Connection = connect1;
+                        connect1.Open();
+                        cmd.Parameters.AddWithValue("@Email", Email);
+                        ReviewedUserId = Convert.ToInt32(cmd.ExecuteScalar().ToString());
+                    }
+                }
+                using (SqlConnection connect1 = new SqlConnection(str))
+                {
+                    using (SqlCommand cmd = new SqlCommand("insert into tblReviews(ReviewerId, Review, ReviewedUserId, ReviewedSkillId) values (@ReviewerId, @Review, @ReviewedUserId, @ReviewedSkillId)"))
+                    {
+                        cmd.Connection = connect1;
+                        connect1.Open();
+                        cmd.Parameters.AddWithValue("@ReviewerId", UserId);
+                        cmd.Parameters.AddWithValue("@Review", review);
+                        cmd.Parameters.AddWithValue("@ReviewedUserId", ReviewedUserId);
+                        cmd.Parameters.AddWithValue("@ReviewedSkillId", skillID);
+
+                        //connect1.Open();
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+            ((TextBox)e.Item.FindControl("tbxReview")).Visible = false;
+            ((LinkButton)e.Item.FindControl("btnPost")).Visible = false;
+            ((LinkButton)e.Item.FindControl("btnReview")).Visible = true;
+        }
+    }
+
+
 
     protected void btnAddSkill_Click(object sender, EventArgs e)
     {
@@ -289,4 +378,5 @@ public partial class User_Profile : System.Web.UI.Page
     {
         Response.Redirect("Skills.aspx");
     }
+
 }

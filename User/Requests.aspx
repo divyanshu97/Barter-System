@@ -148,6 +148,25 @@
             </table>
             <asp:Label ID="lblInfo" runat="server" ForeColor="#CC0000" ></asp:Label>
         </div>
+        <div>
+            <p>
+                You have Following Messages
+            </p>
+            <asp:Repeater id="RepeaterMessages" runat="server" OnItemCommand="RepeaterMessageViewed_ItemCommand">
+                 <%----%>
+                <ItemTemplate>
+            <table>
+                <tr>
+                    <asp:LinkButton ID="btnSender" runat="server" CommandName="Message" Text='<%#Eval("Email") %>'></asp:LinkButton>
+                </tr>
+            </table>
+                    </ItemTemplate>
+                </asp:Repeater>
+            <asp:Label ID="lblMessage" runat="server" ForeColor="#CC0000" ></asp:Label>
+        </div>
     </form>
 </body>
 </html>
+
+
+<%--CommandName="Message" CommandArgument="<%# DataBinder.Eval(Container.DataItem,"Id") %>"--%>

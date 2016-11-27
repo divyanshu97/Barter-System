@@ -16,6 +16,10 @@ public partial class Requests : System.Web.UI.Page
         DataSet ds = GetData();
         RepeaterRequest.DataSource = ds;
         RepeaterRequest.DataBind();
+
+        ds = GetMessage();
+        RepeaterMessages.DataSource = ds;
+        RepeaterMessages.DataBind();
     }
     protected DataSet GetData()
     {
@@ -50,6 +54,41 @@ public partial class Requests : System.Web.UI.Page
     }
 
 
+    protected DataSet GetMessage()
+    {
+        int userId = Convert.ToInt32(Session["UserId"]);
+        string str = ConfigurationManager.ConnectionStrings["UserDetailsConnectionString"].ConnectionString;
+        int count = 0;
+        using (SqlConnection connect = new SqlConnection(str))
+        {
+            using (SqlCommand cmd = new SqlCommand("Select count(*) from tblMessage where senderId = @userId or recieverId=@userId"))
+            {
+                cmd.Connection = connect;
+                connect.Open();
+                cmd.Parameters.AddWithValue("@userId",userId);
+                count = Convert.ToInt32(cmd.ExecuteScalar().ToString());
+                connect.Close();
+            }
+        }
+        if (count == 0)
+        {
+            lblMessage.Text = "<br>" + "No Message recieved till Now";
+        }
+        else
+        {
+            lblMessage.Text = "";
+        }
+        using (SqlConnection connect = new SqlConnection(str))
+        {
+            string command = "Select Distinct m.senderId,u.Email from tblMessage as m inner join tblUsers as u on m.senderId=u.Id where m.recieverId= "+userId+"";
+            SqlDataAdapter da = new SqlDataAdapter(command, connect);
+            DataSet ds = new DataSet();
+            da.Fill(ds);
+            return ds;
+        }
+    }
+
+
     protected void RepeaterRequest_ItemCommand(object source, RepeaterCommandEventArgs e)
     {
         if(e.CommandName== "Accept")
@@ -68,6 +107,30 @@ public partial class Requests : System.Web.UI.Page
                 }
             }
             Response.Redirect("Requests.aspx");
+        }
+    }
+
+
+    protected void RepeaterMessageViewed_ItemCommand(object source, RepeaterCommandEventArgs e)
+    {
+        if(e.CommandName== "Message")
+        {
+            int ID = 0;
+            string Email = ((LinkButton)e.Item.FindControl("btnSender")).Text;
+            string connString = ConfigurationManager.ConnectionStrings["UserDetailsConnectionString"].ConnectionString;
+            using (SqlConnection connect = new SqlConnection(connString))
+            {
+                using (SqlCommand cmd = new SqlCommand("select Id from tblUsers WHERE Email=@Email"))
+                {
+                    cmd.Connection = connect;
+                    connect.Open();
+                    cmd.Parameters.AddWithValue("@Email", Email);
+                    ID = Convert.ToInt32(cmd.ExecuteScalar().ToString());
+                    connect.Close();
+                }
+            }
+            Session["MessageToId"] = ID;
+            Response.Redirect("Message.aspx");
         }
     }
 }
