@@ -21,7 +21,6 @@
         <asp:ScriptManager ID="ScriptManager1" runat="server">
         </asp:ScriptManager>
         <div class="container-fluid">
-
             <div class="row">
                 <div class="col-sm-12 col-lg-12 col-xs-12">
                     <div class="signup-form">

@@ -16,7 +16,7 @@ public partial class Commenting : System.Web.UI.Page
         {
             if (Session["UserId"] != null)
             {
-                RepeaterComment.DataSource = GetComments("Select c.Id,c.Comment,c.Likes,u.Name from tblComments as c inner join tblUsers as u on u.Id=c.SenderId");
+                RepeaterComment.DataSource = GetComments("Select c.Id,c.Comment,c.Likes,u.Name,u.Image from tblComments as c inner join tblUsers as u on u.Id=c.SenderId");
                 RepeaterComment.DataBind();
             }
             else
@@ -77,7 +77,7 @@ public partial class Commenting : System.Web.UI.Page
             connect.Close();
             tbxComment.Text = "";
         }
-        RepeaterComment.DataSource = GetComments("Select c.Id,c.Comment,c.Likes,u.Name from tblComments as c inner join tblUsers as u on u.Id=c.SenderId");
+        RepeaterComment.DataSource = GetComments("Select c.Id,c.Comment,c.Likes,u.Name,u.Image from tblComments as c inner join tblUsers as u on u.Id=c.SenderId");
         RepeaterComment.DataBind();
 
         Response.Redirect("Commenting.aspx");
@@ -89,7 +89,7 @@ public partial class Commenting : System.Web.UI.Page
         {
             string Id = ((Label)e.Item.FindControl("lblCommentId")).Text;
             Repeater RepeaterReply = e.Item.FindControl("RepeaterReply") as Repeater;
-            RepeaterReply.DataSource = GetComments(string.Format("SELECT r.ReplyedOnCommentId,r.ReplyerId,r.Reply,u.Name,u.Id FROM tblReply as r inner join tblUsers as u on r.ReplyerId=u.Id WHERE ReplyedOnCommentId='{0}'", Id));
+            RepeaterReply.DataSource = GetComments(string.Format("SELECT r.ReplyedOnCommentId,r.ReplyerId,r.Reply,u.Name,u.Image FROM tblReply as r inner join tblUsers as u on r.ReplyerId=u.Id WHERE ReplyedOnCommentId='{0}'", Id));
             RepeaterReply.DataBind();
         }
     }
@@ -109,6 +109,7 @@ public partial class Commenting : System.Web.UI.Page
         if (e.CommandName == "reply")
         {
             Repeater rptComment = (Repeater)e.Item.FindControl("RepeaterComment");
+            //((Image)e.Item.FindControl("imgCommentImage")).ImageUrl = "../User/Handler.ashx?imgID=" + Session["UserId"];
             ((TextBox)e.Item.FindControl("tbxReply")).Visible = true;
             ((LinkButton)e.Item.FindControl("btnReply")).Visible = false;
             ((LinkButton)e.Item.FindControl("btnPost")).Visible = true;

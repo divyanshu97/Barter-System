@@ -48,7 +48,7 @@ namespace BarterSystem
                 {
                     if (ProfilePicture != null)
                     {
-                        using (SqlCommand cmdDetails = new SqlCommand("insert into tblUsers(Name, Email, Password, Gender, City, Phone, Dob, ProfilePicture) values (@Name, @Email, @Password, @Gender, @City, @Phone, @Dob, @ProfilePicture)"))
+                        using (SqlCommand cmdDetails = new SqlCommand("insert into tblUsers(Name, Email, Password, Gender, City, Phone, Dob, ProfilePicture,Image) values (@Name, @Email, @Password, @Gender, @City, @Phone, @Dob, @ProfilePicture,@Image)"))
                         {
                             cmdDetails.Connection = connect1;
                             connect1.Open();
@@ -60,7 +60,8 @@ namespace BarterSystem
                             cmdDetails.Parameters.AddWithValue("@Phone", objUser.Phone);
                             cmdDetails.Parameters.AddWithValue("@Dob", objUser.Dob);
                             cmdDetails.Parameters.AddWithValue("@ProfilePicture", objUser.ProfilePicture);
-                            
+                            cmdDetails.Parameters.AddWithValue("@Image", "../User/Handler.ashx?imgID="+objUser.Id);
+
                             //connect1.Open();
                             cmdDetails.ExecuteNonQuery();
                         }
@@ -78,7 +79,7 @@ namespace BarterSystem
                             cmdDetails.Parameters.AddWithValue("@City", objUser.City);
                             cmdDetails.Parameters.AddWithValue("@Phone", objUser.Phone);
                             cmdDetails.Parameters.AddWithValue("@Dob", objUser.Dob);
-                           
+                            cmdDetails.Parameters.AddWithValue("@Image", "../User/Handler.ashx?imgID=32");
                             //connect1.Open();
                             cmdDetails.ExecuteNonQuery();
                         }

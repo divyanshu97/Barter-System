@@ -12,13 +12,20 @@ public partial class ProviderProfile : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-        DataSet ds = GetData();
-        RepeaterProfile.DataSource = ds;
-        RepeaterProfile.DataBind();
+        if (Session["UserLogin"] != null)
+        {
+            DataSet ds = GetData();
+            RepeaterProfile.DataSource = ds;
+            RepeaterProfile.DataBind();
 
-        ds = GetSkills();
-        RepeaterSkills.DataSource = ds;
-        RepeaterSkills.DataBind();
+            ds = GetSkills();
+            RepeaterSkills.DataSource = ds;
+            RepeaterSkills.DataBind();
+        }
+        else
+        {
+            Response.Redirect("Login.aspx");
+        }
     }
     protected DataSet GetData()
     {
@@ -158,5 +165,10 @@ public partial class ProviderProfile : System.Web.UI.Page
             }
             return dt;
         }
+    }
+
+    protected void btnMessage_Click(object sender, EventArgs e)
+    {
+        Response.Redirect("Message.aspx");
     }
 }

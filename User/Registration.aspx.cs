@@ -113,7 +113,25 @@ public partial class Registration : System.Web.UI.Page
 
 
         objUser.SignUp(objUser);
-        string subject = "Account Activation";
+        using (SqlConnection connect1 = new SqlConnection(connString))
+        {
+            int uId = 0;
+            using (SqlCommand cmdDetails = new SqlCommand("select Id from tblUsers where Email='" + tbxEmail.Text + "'"))
+            {
+                cmdDetails.Connection = connect1;
+                connect1.Open();
+                uId=Convert.ToInt32(cmdDetails.ExecuteScalar().ToString());
+                cmdDetails.ExecuteNonQuery();
+            }
+            using (SqlCommand cmdDetails = new SqlCommand("update tblUsers set Image=@Image where Id=@Id"))
+            {
+                cmdDetails.Connection = connect1;
+                cmdDetails.Parameters.AddWithValue("@Id", uId);
+                cmdDetails.Parameters.AddWithValue("@Image", "../User/Handler.ashx?imgID=" + uId.ToString());
+                cmdDetails.ExecuteNonQuery();
+            }
+        }
+            string subject = "Account Activation";
 
         string body = "<a href='" + activationUrl + "'>Click Here to verify your acount</a>";
 

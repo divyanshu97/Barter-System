@@ -38,6 +38,7 @@
                 width: 106%;
             }
         }
+
         .auto-style3 {
             width: 100px;
         }
@@ -81,12 +82,12 @@
                             </div>
                         </form>
                     </li>
-                                      
+
                     <li><a href="Profile.aspx" class="[ animate ]">PROFILE</a></li>
                     <li><a href="Commenting.aspx" class="[ animate ]">POSTS</a></li>
                     <li><a href="AddSkills.aspx" class="[ animate ]">ADD SKILLS</a></li>
                     <li><a href="Skills.aspx" class="[ animate ]">SEARCH SKILLS</a></li>
-                    <li><a href="Requests.aspx" class="[ animate ]">REQUESTS</a></li> 
+                    <li><a href="Requests.aspx" class="[ animate ]">REQUESTS</a></li>
                     <li>
                         <%--<a href="#" class="[ dropdown-toggle ][ animate ]" data-toggle="dropdown">GENRES <span class="[ caret ]"></span></a>--%>
                         <%--<ul class="[ dropdown-menu ]" role="menu">
@@ -103,6 +104,7 @@
 
 
                     <li><a class="animate" href="Logout.aspx">LOGOUT</a></li>
+                </ul>
             </div>
         </div>
     </nav>
@@ -111,17 +113,20 @@
         <div>&nbsp</div>
         <div>&nbsp</div>
         <div>&nbsp</div>
-        
-                                <div style="height:230px;width:230px;">
-                                <asp:Image ID="imgProfile" runat="server" style="height:100%;width:100%;max-height:100%;max-width:100%;"/>
-                                    </div>
+
+        <div>
+            <asp:Button ID="btnMessage" runat="server" OnClick="btnMessage_Click" Text="Message" />
+        </div>
+
+        <div style="height: 230px; width: 230px;">
+            <asp:Image ID="imgProfile" runat="server" Style="height: 100%; width: 100%; max-height: 100%; max-width: 100%;" />
+        </div>
         <div>
             <asp:Repeater ID="RepeaterProfile" OnItemCommand="RepeaterProfile_ItemCommand" runat="server">
                 <ItemTemplate>
                     <table>
                         <tr>
-                            <td>
-                            </td>
+                            <td></td>
                             <th>&nbsp&nbsp</th>
                             <td>
                                 <table>

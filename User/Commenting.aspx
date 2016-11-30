@@ -141,7 +141,9 @@
                     <table>
                         <th>&nbsp</th>
                         <tr>
-
+                            <td>
+                                <asp:Image ID="imgCommentImage" ImageUrl='<%# Eval("Image")%>' runat="server" style="height:40px;width:40px"/>
+                            </td>
                             <td>
                                 <asp:Label ID="lblCommentId" runat="server" Text='<%#Eval("Id") %>' Visible="false"></asp:Label>
                                 <asp:Label ID="lblSender" runat="server" Text='<%#Eval("Name") %>' Font-Bold="true" Font-Size="Medium"></asp:Label>
@@ -172,6 +174,9 @@
                                         <th>&nbsp&nbsp</th>
                                         <td>
                                             <asp:Label ID="lblContinue" runat="server" ></asp:Label>
+                                        </td>
+                                        <td>
+                                            <asp:Image ID="imgReplyImage" ImageUrl='<%# Eval("Image")%>' runat="server"  style="height:40px;width:40px" />
                                         </td>
                                         <td>
                                             <asp:Label ID="lblSender" runat="server" Text='<%#Eval("Name") %>' Font-Bold="true" Font-Size="Medium"></asp:Label>

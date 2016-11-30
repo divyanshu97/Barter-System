@@ -111,7 +111,12 @@ public partial class AddSkills : System.Web.UI.Page
                 }
             }
         }
-        if (skillCount == 0) //to add skill to tblSkills if not present
+        if(ddlGenre.SelectedItem.Text=="Select")
+        {
+            ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Select a Skill.')", true);
+            return;
+        }
+        else if (skillCount == 0) //to add skill to tblSkills if not present
         {
             using (SqlConnection connect = new SqlConnection(connString))
             {

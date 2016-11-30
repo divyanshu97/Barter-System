@@ -269,7 +269,7 @@
                 </asp:Repeater>
             </table>
             <asp:Label ID="lblInfo1" runat="server" ForeColor="#CC0000"></asp:Label>
-            <asp:Button ID="btnAddSkill" runat="server" Text="Add Skill" OnClick="btnAddSkill_Click" Visible="false" />
+            <asp:Button ID="btnAddSkill" runat="server" class="btn btn-primary"  Text="Add Skill" OnClick="btnAddSkill_Click" Visible="false" />
             
             <br />
             <br />
@@ -300,7 +300,7 @@
             </div>
             <asp:Label ID="lblInfo2" runat="server" ForeColor="#CC0000"></asp:Label>
 
-            <asp:Button ID="btnSearchSkill" runat="server" Text="Search Skill" OnClick="btnSearchSkill_Click" Visible="false" />
+            <asp:Button ID="btnSearchSkill" runat="server" class="btn btn-primary"  Text="Search Skill" OnClick="btnSearchSkill_Click" Visible="false" />
         </div>
 
     </form>
