@@ -15,6 +15,7 @@ public partial class AddSkills : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
+        ddlGenre.Visible = true;
         if (!IsPostBack)
         {
             if (Session["UserLogin"] != null)
@@ -111,29 +112,32 @@ public partial class AddSkills : System.Web.UI.Page
                 }
             }
         }
-        if(ddlGenre.SelectedItem.Text=="Select")
+        if (ddlGenre.SelectedItem.Text == "Select")
         {
-            ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Select a Skill.')", true);
+            ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Select a Genre.')", true);
             return;
         }
-        else if (skillCount == 0) //to add skill to tblSkills if not present
+        else
         {
-            using (SqlConnection connect = new SqlConnection(connString))
+            if (skillCount == 0) //to add skill to tblSkills if not present
             {
-                using (SqlCommand cmdAddSkill = new SqlCommand("INSERT INTO tblSkills (SkillName, GenreId) values (@SkillName, @GenreId)"))
+                using (SqlConnection connect = new SqlConnection(connString))
                 {
-                    cmdAddSkill.Connection = connect;
-                    connect.Open();
-                    cmdAddSkill.Parameters.AddWithValue("@SkillName", tbxEnterSkill.Text);
-                    if (genreId == 0)
+                    using (SqlCommand cmdAddSkill = new SqlCommand("INSERT INTO tblSkills (SkillName, GenreId) values (@SkillName, @GenreId)"))
                     {
-                        cmdAddSkill.Parameters.AddWithValue("@GenreId", ddlGenre.SelectedValue);
-                        cmdAddSkill.ExecuteNonQuery();
-                    }
-                    else
-                    {
-                        cmdAddSkill.Parameters.AddWithValue("@GenreId", genreId);
-                        cmdAddSkill.ExecuteNonQuery();
+                        cmdAddSkill.Connection = connect;
+                        connect.Open();
+                        cmdAddSkill.Parameters.AddWithValue("@SkillName", tbxEnterSkill.Text);
+                        if (genreId == 0)
+                        {
+                            cmdAddSkill.Parameters.AddWithValue("@GenreId", ddlGenre.SelectedValue);
+                            cmdAddSkill.ExecuteNonQuery();
+                        }
+                        else
+                        {
+                            cmdAddSkill.Parameters.AddWithValue("@GenreId", genreId);
+                            cmdAddSkill.ExecuteNonQuery();
+                        }
                     }
                 }
             }
@@ -322,10 +326,14 @@ public partial class AddSkills : System.Web.UI.Page
         }
         if (genreCount == 0 && tbxGenreName.Text!="")
         {
+            
             Genres objGenres = new Genres();
             objGenres.Genre = tbxGenreName.Text.Trim();
 
             objGenres.AddGenre(objGenres);
+            Response.Redirect("AddSkills.aspx");
+            ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('New Genre added.')", true);
+
         }
         else if(tbxGenreName.Text!="")
         {
@@ -333,6 +341,6 @@ public partial class AddSkills : System.Web.UI.Page
         }
         else
             ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Enter Name of Genre.')", true);
-        // Response.Redirect("AddSkills.aspx");
+        //Response.Redirect("AddSkills.aspx");
     }
 }

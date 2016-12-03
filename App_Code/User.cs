@@ -79,7 +79,8 @@ namespace BarterSystem
                             cmdDetails.Parameters.AddWithValue("@City", objUser.City);
                             cmdDetails.Parameters.AddWithValue("@Phone", objUser.Phone);
                             cmdDetails.Parameters.AddWithValue("@Dob", objUser.Dob);
-                            cmdDetails.Parameters.AddWithValue("@Image", "../User/Handler.ashx?imgID=32");
+                            
+                            cmdDetails.Parameters.AddWithValue("@Image", "../User/Handler.ashx?imgID="+ objUser.Id);
                             //connect1.Open();
                             cmdDetails.ExecuteNonQuery();
                         }

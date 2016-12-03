@@ -12,7 +12,7 @@ public class Mail
     
     public static void Send_Mail(string Email, string Body, string Subject)
     {
-        using (MailMessage mm = new MailMessage("divyanshushuakla1997@gmail.com", Email))
+        using (MailMessage mm = new MailMessage("divyanshushukla1997@gmail.com", Email))
         {
             mm.Subject = Subject;
             mm.Body = Body;
@@ -20,7 +20,7 @@ public class Mail
             SmtpClient smtp = new SmtpClient();
             smtp.Host = "smtp.gmail.com";
             smtp.EnableSsl = true;
-            NetworkCredential NetworkCred = new NetworkCredential("divyanshushukla1997@gmail.com", "***Password***");
+            NetworkCredential NetworkCred = new NetworkCredential("divyanshushukla1997@gmail.com", "**Password**");
             smtp.UseDefaultCredentials = true;
             smtp.Credentials = NetworkCred;
             smtp.Port = 587;

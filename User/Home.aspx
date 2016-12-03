@@ -82,6 +82,8 @@
 					
 					<li><a href="#about-barter" class="[ animate ]">ABOUT</a></li>
                     <li><a href="Query.aspx" class="[ animate ]">QUERY US</a></li>
+                    <li><a href="Login.aspx" class="[ animate ]">LOGIN</a></li>
+                    <li><a href="Registration.aspx" class="[ animate ]">SIGNUP</a></li>
 					<li>
 						<%--<a href="#" class="[ dropdown-toggle ][ animate ]" data-toggle="dropdown">GENRES <span class="[ caret ]"></span></a>--%>
 						<%--<ul class="[ dropdown-menu ]" role="menu">
@@ -97,7 +99,7 @@
 					</li>
 					
 				
-					<li><a class="animate" href="#myModal_login"data-toggle="modal" data-target="#myModal_login">SIGNUP/LOGIN</a></li>
+					<%--<li><a class="animate" href="#myModal_login"data-toggle="modal" data-target="#myModal_login">SIGNUP/LOGIN</a></li>--%>
 								
 				
 		

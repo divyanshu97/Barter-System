@@ -139,18 +139,18 @@ public partial class ProviderProfile : System.Web.UI.Page
                 lblInfo.Text = "You have already requested for this skill from this user";
             }
         }
-        else if(e.CommandName== "Show_Reviews")
+        else if (e.CommandName == "Show_Reviews")
         {
 
             int ID = Convert.ToInt32(e.CommandArgument.ToString());
-            Session["SkillReviewed"] =ID;
+            Session["SkillReviewed"] = ID;
             Response.Redirect("Reviews.aspx");
         }
     }
 
     protected void RepeaterProfile_ItemCommand(object source, RepeaterCommandEventArgs e)
     {
-        if (e.CommandName=="Apply")
+        if (e.CommandName == "Apply")
         {
             byte[] bytes = (byte[])GetProfilePhoto("SELECT ProfilePicture FROM tblUsers WHERE Id =" + Convert.ToInt32(Session["UserId"])).Rows[0]["ProfilePicture"];
             string base64String = Convert.ToBase64String(bytes, 0, bytes.Length);
@@ -179,7 +179,7 @@ public partial class ProviderProfile : System.Web.UI.Page
 
     protected void btnMessage_Click(object sender, EventArgs e)
     {
-        Session["MessageToId"] =Session["ProviderId"];
+        Session["MessageToId"] = Session["ProviderId"];
         Response.Redirect("Message.aspx");
     }
 }

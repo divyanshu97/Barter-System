@@ -13,13 +13,13 @@ public partial class SearchSkills : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-        
+
         if (!IsPostBack)
         {
             if (Session["UserLogin"] != null)
             {
-            string connString = ConfigurationManager.ConnectionStrings["UserDetailsConnectionString"].ConnectionString;
-                
+                string connString = ConfigurationManager.ConnectionStrings["UserDetailsConnectionString"].ConnectionString;
+
                 using (SqlConnection connect = new SqlConnection(connString))
                 {
                     using (SqlCommand cmd = new SqlCommand("SELECT Id, Genre FROM tblGenre"))
@@ -36,18 +36,18 @@ public partial class SearchSkills : System.Web.UI.Page
 
                 ddlGenre.Items.Insert(0, new ListItem("Select", "-1"));
                 using (SqlConnection connect = new SqlConnection(connString))
-            {
-                using (SqlCommand cmd = new SqlCommand("SELECT Id, SkillName FROM tblSkills"))
                 {
-                    cmd.Connection = connect;
-                    connect.Open();
-                    ddlSkills.DataSource = cmd.ExecuteReader();
-                    ddlSkills.DataTextField = "SkillName";
-                    ddlSkills.DataValueField = "Id";
-                    ddlSkills.DataBind();
-                    connect.Close();
+                    using (SqlCommand cmd = new SqlCommand("SELECT Id, SkillName FROM tblSkills"))
+                    {
+                        cmd.Connection = connect;
+                        connect.Open();
+                        ddlSkills.DataSource = cmd.ExecuteReader();
+                        ddlSkills.DataTextField = "SkillName";
+                        ddlSkills.DataValueField = "Id";
+                        ddlSkills.DataBind();
+                        connect.Close();
+                    }
                 }
-            }
                 ddlSkills.Items.Insert(0, new ListItem("Select", "-1"));
             }
             else

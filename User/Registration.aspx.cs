@@ -109,13 +109,14 @@ public partial class Registration : System.Web.UI.Page
         objUser.Phone = tbxPhone.Text;
         objUser.Dob = tbxDob.Text;
 
-        string activationUrl = "http://localhost:59195/User/Verification.aspx?Email=" + tbxEmail.Text;
+        //string activationUrl = "http://localhost:49614/User/Verification.aspx?Email=" + tbxEmail.Text;
 
 
         objUser.SignUp(objUser);
+        int uId = 0;
         using (SqlConnection connect1 = new SqlConnection(connString))
         {
-            int uId = 0;
+            //int uId = 0;
             using (SqlCommand cmdDetails = new SqlCommand("select Id from tblUsers where Email='" + tbxEmail.Text + "'"))
             {
                 cmdDetails.Connection = connect1;
@@ -131,7 +132,8 @@ public partial class Registration : System.Web.UI.Page
                 cmdDetails.ExecuteNonQuery();
             }
         }
-            string subject = "Account Activation";
+        string activationUrl = "http://localhost:49614/User/Verification.aspx?UserId=" + uId +"&Email=" + Hash.Encrypt_Password(tbxEmail.Text);
+        string subject = "Account Activation";
 
         string body = "<a href='" + activationUrl + "'>Click Here to verify your acount</a>";
 

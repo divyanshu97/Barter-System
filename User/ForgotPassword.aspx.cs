@@ -4,17 +4,35 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Data;
+using System.Data.SqlClient;
+using System.Configuration;
+using System.Text;
+using System.IO;
 
 public partial class User_ForgotPassword : System.Web.UI.Page
 {
     string changePasswordUrl;
     protected void Page_Load(object sender, EventArgs e)
     {
-        changePasswordUrl = "http://localhost:59195/User/ChangePassword.aspx?Email=" + tbxEmail.Text;
+        
     }
 
     protected void SendMail(object sender, EventArgs e)
     {
+        int UserId = 0;
+        string connString = ConfigurationManager.ConnectionStrings["UserDetailsConnectionString"].ConnectionString;
+        using (SqlConnection connect = new SqlConnection(connString))
+        {
+            using (SqlCommand cmd = new SqlCommand("select Id from tblUsers where Email='" + tbxEmail.Text + "'"))
+            {
+                cmd.Connection = connect;
+                connect.Open();
+                UserId = Convert.ToInt32(cmd.ExecuteScalar());
+            }
+        }
+        if (UserId != 0)
+            changePasswordUrl = "http://localhost:49614/User/ChangePassword.aspx?UserId=" + UserId + "&Email=" + Hash.Encrypt_Password(tbxEmail.Text);
         try
         {
 
@@ -28,7 +46,7 @@ public partial class User_ForgotPassword : System.Web.UI.Page
         }
         catch(Exception except)
         {
-            ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Unable to send you the Link.<br/>Check your Internet Connection')", true);
+            ScriptManager.RegisterClientScriptBlock(this, this.GetType(), "alertMessage", "alert('Unable to send you the Link. Check your Internet Connection')", true);
         }
     }
 }

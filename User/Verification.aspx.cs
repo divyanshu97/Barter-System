@@ -15,11 +15,11 @@ public partial class User_Verification : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         int count;
-        string USEREMAIL = Request.QueryString["Email"];
+        string USERID = Request.QueryString["UserId"];
         string connString = ConfigurationManager.ConnectionStrings["UserDetailsConnectionString"].ConnectionString;
         using (SqlConnection connect = new SqlConnection(connString))
         {
-            using (SqlCommand cmd = new SqlCommand("select count(*) from tblUsers where Email='" + USEREMAIL + "'"))
+            using (SqlCommand cmd = new SqlCommand("select count(*) from tblUsers where Id='" + USERID + "'"))
             {
                 cmd.Connection = connect;
                 connect.Open();
@@ -31,11 +31,11 @@ public partial class User_Verification : System.Web.UI.Page
         {
             using (SqlConnection connect = new SqlConnection(connString))
             {
-                using (SqlCommand cmd = new SqlCommand("Update tblUsers set Activated=1 where Email=@Email"))
+                using (SqlCommand cmd = new SqlCommand("Update tblUsers set Activated=1 where Id=@Id"))
                 {
                     cmd.Connection = connect;
                     connect.Open();
-                    cmd.Parameters.AddWithValue("@Email", USEREMAIL);
+                    cmd.Parameters.AddWithValue("@Id", USERID);
                     cmd.ExecuteNonQuery();
                     Response.Redirect("Login.aspx");
                 }

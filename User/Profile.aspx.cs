@@ -81,14 +81,12 @@ public partial class User_Profile : System.Web.UI.Page
 
 
             ((Label)e.Item.FindControl("lblName")).Visible = false;
-            ((Label)e.Item.FindControl("lblEmail")).Visible = false;
             ((Label)e.Item.FindControl("lblGender")).Visible = false;
             ((Label)e.Item.FindControl("lblCity")).Visible = false;
             ((Label)e.Item.FindControl("lblPhone")).Visible = false;
             ((Label)e.Item.FindControl("lblDob")).Visible = true;
 
             ((TextBox)e.Item.FindControl("tbxName")).Visible = true;
-            ((TextBox)e.Item.FindControl("tbxEmail")).Visible = true;
             ((TextBox)e.Item.FindControl("tbxCity")).Visible = true;
             ((TextBox)e.Item.FindControl("tbxPhone")).Visible = true;
             ((Label)e.Item.FindControl("tbxDob")).Visible = false;
@@ -138,7 +136,6 @@ public partial class User_Profile : System.Web.UI.Page
             ((Label)e.Item.FindControl("lblDob")).Visible = true;
 
             ((TextBox)e.Item.FindControl("tbxName")).Visible = false;
-            ((TextBox)e.Item.FindControl("tbxEmail")).Visible = false;
             ((RadioButton)e.Item.FindControl("RadioButtonMale")).Visible = false;
             ((RadioButton)e.Item.FindControl("RadioButtonFemale")).Visible = false;
             ((TextBox)e.Item.FindControl("tbxCity")).Visible = false;
@@ -215,6 +212,18 @@ public partial class User_Profile : System.Web.UI.Page
                     cmd.ExecuteNonQuery();
                 }
             }
+            using (SqlConnection connect = new SqlConnection(connString))
+            {
+                using (SqlCommand cmd = new SqlCommand("DELETE FROM tblUserFollowMapping WHERE SkillId=@SkillID and FollowedId=@UserId "))
+                {
+                    cmd.Connection = connect;
+                    connect.Open();
+                    cmd.Parameters.AddWithValue("@SkillId", ID);
+                    cmd.Parameters.AddWithValue("@UserId", UserId);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+
             Response.Redirect("Profile.aspx");
         }
     }
@@ -241,11 +250,11 @@ public partial class User_Profile : System.Web.UI.Page
         else
         {
             lblInfo1.Text = "";
-            btnAddSkill.Visible = false;
+            btnAddSkill.Visible = true;
         }
         using (SqlConnection connect = new SqlConnection(str))
         {
-            SqlDataAdapter da = new SqlDataAdapter("Select s.SkillName,u.Rating,s.Id from tblUserSkillMapping as u inner join tblSkills as s on u.SkillId=s.Id where UserId='" + Convert.ToInt32(Session["UserId"]) + "'", connect);
+            SqlDataAdapter da = new SqlDataAdapter("Select s.SkillName,u.Rating,u.SkillDetails,s.Id from tblUserSkillMapping as u inner join tblSkills as s on u.SkillId=s.Id where UserId='" + Convert.ToInt32(Session["UserId"]) + "'", connect);
             DataSet ds = new DataSet();
             da.Fill(ds);
             return ds;
@@ -274,7 +283,7 @@ public partial class User_Profile : System.Web.UI.Page
         else
         {
             lblInfo2.Text = "";
-            btnSearchSkill.Visible = false;
+            btnSearchSkill.Visible = true; 
         }
         using (SqlConnection connect = new SqlConnection(str))
         {
@@ -310,7 +319,7 @@ public partial class User_Profile : System.Web.UI.Page
         }
         using (SqlConnection connect = new SqlConnection(str))
         {
-            SqlDataAdapter da = new SqlDataAdapter("Select s.SkillName,u.FollowedId,s.Id,ur.Email from tblUserFollowMapping as u inner join tblSkills as s on u.SkillId=s.Id inner join tblUsers as ur on ur.Id=u.FollowedId where u.Accepted=1 and FollowedId='" + Convert.ToInt32(Session["UserId"]) + "'", connect);
+            SqlDataAdapter da = new SqlDataAdapter("Select s.SkillName,u.FollowerId,s.Id,ur.Email from tblUserFollowMapping as u inner join tblSkills as s on u.SkillId=s.Id inner join tblUsers as ur on ur.Id=u.FollowerId where u.Accepted=1 and FollowedId='" + Convert.ToInt32(Session["UserId"]) + "'", connect);
             DataSet ds = new DataSet();
             da.Fill(ds);
             return ds;
@@ -334,7 +343,7 @@ public partial class User_Profile : System.Web.UI.Page
             int skillID = Convert.ToInt32(e.CommandArgument.ToString());
             int ReviewedUserId;
             string Email = ((Label)e.Item.FindControl("lblRequestFrom")).Text;
-            if(review!="")
+            if (review != "")
             {
                 using (SqlConnection connect1 = new SqlConnection(str))
                 {
@@ -377,6 +386,10 @@ public partial class User_Profile : System.Web.UI.Page
     protected void btnSearchSkill_Click(object sender, EventArgs e)
     {
         Response.Redirect("Skills.aspx");
+    }
+    protected void btnPost_Click(object sender, EventArgs e)
+    {
+        Response.Redirect("Commenting.aspx");
     }
 
 }

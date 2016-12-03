@@ -10,7 +10,7 @@ public partial class Home : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-
+        Session["UserLogin"] = null;
     }
 
     //protected void btnSearchUser_Click(object sender, EventArgs e)

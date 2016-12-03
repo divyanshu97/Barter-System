@@ -38,7 +38,7 @@ public partial class Requests : System.Web.UI.Page
         }
         if (count == 0)
         {
-            lblInfo.Text = "<br>"+"No Request recieved till Now";
+            lblInfo.Text = "<br>" + "No Request recieved till Now";
         }
         else
         {
@@ -65,7 +65,7 @@ public partial class Requests : System.Web.UI.Page
             {
                 cmd.Connection = connect;
                 connect.Open();
-                cmd.Parameters.AddWithValue("@userId",userId);
+                cmd.Parameters.AddWithValue("@userId", userId);
                 count = Convert.ToInt32(cmd.ExecuteScalar().ToString());
                 connect.Close();
             }
@@ -80,7 +80,7 @@ public partial class Requests : System.Web.UI.Page
         }
         using (SqlConnection connect = new SqlConnection(str))
         {
-            string command = "Select Distinct m.senderId,u.Email from tblMessage as m inner join tblUsers as u on m.senderId=u.Id where m.recieverId= "+userId+"";
+            string command = "Select Distinct m.senderId,u.Email from tblMessage as m inner join tblUsers as u on m.senderId=u.Id where m.recieverId= " + userId + "";
             SqlDataAdapter da = new SqlDataAdapter(command, connect);
             DataSet ds = new DataSet();
             da.Fill(ds);
@@ -91,7 +91,7 @@ public partial class Requests : System.Web.UI.Page
 
     protected void RepeaterRequest_ItemCommand(object source, RepeaterCommandEventArgs e)
     {
-        if(e.CommandName== "Accept")
+        if (e.CommandName == "Accept")
         {
             int ID = Convert.ToInt32(e.CommandArgument.ToString());
             int UserId = Convert.ToInt32(Session["UserId"]);
@@ -113,7 +113,7 @@ public partial class Requests : System.Web.UI.Page
 
     protected void RepeaterMessageViewed_ItemCommand(object source, RepeaterCommandEventArgs e)
     {
-        if(e.CommandName== "Message")
+        if (e.CommandName == "Message")
         {
             int ID = 0;
             string Email = ((LinkButton)e.Item.FindControl("btnSender")).Text;
